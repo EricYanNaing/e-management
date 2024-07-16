@@ -7,6 +7,7 @@ const path = require("path");
 
 // import routes
 const eventRoute = require("./routes/eventRoute");
+const authRoute = require("./routes/authRoutes");
 
 //connect mongodb
 const mongoose = require("mongoose");
@@ -46,6 +47,7 @@ app.use(
 );
 
 app.use(eventRoute);
+app.use(authRoute);
 
 mongoose
   .connect(process.env.MONGO_URL)
