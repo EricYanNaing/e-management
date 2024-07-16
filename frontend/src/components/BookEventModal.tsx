@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../lib/store/store";
 
 type ModalProps = {
   showModal: boolean;
@@ -6,6 +8,7 @@ type ModalProps = {
 };
 
 const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
+  const event = useSelector((state: RootState) => state.eventData.event);
   return (
     <>
       {showModal && (
@@ -51,18 +54,18 @@ const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
                 <input
                   type="text"
                   name="price"
-                  value="Event A"
+                  value={event.title}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                 />
               </div>
 
               <div className=" pt-3 pb-2 ">
-                <p className="text-gray-500 ">Event Place</p>
+                <p className="text-gray-500 ">Event Venue</p>
                 <input
                   type="text"
                   name="price"
-                  value="Event Venue"
+                  value={event.place}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                 />
@@ -73,7 +76,7 @@ const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
                 <input
                   type="text"
                   name="price"
-                  value="12 July 2024"
+                  value={event.date}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                 />
@@ -84,7 +87,7 @@ const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
                 <input
                   type="text"
                   name="price"
-                  value="200"
+                  value={event.ga_price}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                 />

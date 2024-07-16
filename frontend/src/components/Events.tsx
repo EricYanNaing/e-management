@@ -1,7 +1,9 @@
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import defaultPhoto from "../assets/default_event_photo.jpg";
+import { FromValuesProps } from "../lib/types/eventformprops";
 
-const Events = () => {
+const Events = ({ event }: { event: FromValuesProps }) => {
   return (
     <>
       <div className="pt-10 px-5">
@@ -14,16 +16,20 @@ const Events = () => {
               <div className="flex-1 truncate">
                 <div className="flex items-center space-x-3">
                   <h3 className="truncate text-sm font-medium text-gray-900">
-                    Title
+                    {event.title}
                   </h3>
                 </div>
                 <p className="mt-1 truncate text-sm text-gray-500">
-                  Description
+                  {event.description}
                 </p>
               </div>
               <img
                 className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                src="https://qph.cf2.quoracdn.net/main-thumb-554097988-200-xietklpojlcioqxaqgcyykzfxblvoqrb.jpeg"
+                src={
+                  event.profile_image
+                    ? `http://localhost:8000/${event.profile_image}`
+                    : defaultPhoto
+                }
                 alt=""
               />
             </div>
@@ -31,7 +37,7 @@ const Events = () => {
               <div className="-mt-px flex divide-x divide-gray-200">
                 <div className="flex w-0 flex-1">
                   <Link
-                    to={"/event/:1"}
+                    to={`/event/${event._id}`}
                     className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
                   >
                     <FaArrowAltCircleRight size={30} />

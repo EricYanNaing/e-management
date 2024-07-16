@@ -4,6 +4,7 @@ import Index from "./pages/Index";
 import EventDetail from "./pages/EventDetail";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
+import Profile from "./pages/Profile";
 
 function App() {
   const routes = [
@@ -26,6 +27,10 @@ function App() {
         {
           path: "/edit/:id",
           element: <EditEvent />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
         },
       ],
     },
