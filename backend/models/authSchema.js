@@ -14,7 +14,12 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    bookedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
+    bookedEvents: [
+      {
+        eventId: { type: Schema.Types.ObjectId, ref: "Event" },
+        ticketType: { type: String, enum: ["GA", "VIP"] },
+      },
+    ],
   },
   {
     timestamps: true,

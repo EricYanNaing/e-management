@@ -25,6 +25,7 @@ export const createUser = async (
 export const bookEvent = async (
   userId: string,
   eventId: string,
+  ticketType: string,
   closeModal: () => void
 ) => {
   console.log(userId, eventId, "BOOKEND IDSS");
@@ -34,7 +35,7 @@ export const bookEvent = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId, eventId }),
+      body: JSON.stringify({ userId, eventId, ticketType }),
     });
 
     if (!response.ok) {
@@ -52,20 +53,19 @@ export const bookEvent = async (
 
 export const getBookedEvents = async (userId: string, dispatch: Dispatch) => {
   try {
-    const response = await fetch("http://localhost:8000/bookedevents", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId }),
-    });
-
+    const response = await fetch(
+      `http://localhost:8000/bookedEvents/${userId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch booked events");
     }
-
     const { bookedEvents } = await response.json();
-    console.log(bookedEvents);
+    console.log(bookedEvents, "BOOKED EVENTS");
     dispatch(setBookEvents(bookedEvents));
   } catch (error) {
     console.error("Error fetching booked events:", error);

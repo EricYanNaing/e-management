@@ -3,7 +3,8 @@ import { redirect } from "react-router-dom";
 const isLogin = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    return redirect("/");
+    alert("Not Authorized !");
+    return redirect("/login");
   }
   const response = await fetch(`${import.meta.env.VITE_API}/status`, {
     headers: {

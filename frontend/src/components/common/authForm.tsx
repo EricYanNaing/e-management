@@ -69,7 +69,7 @@ const AuthForm = ({ isLogin }: { isLogin: boolean }) => {
         },
       });
       if (response.status === 200 || response.status === 201) {
-        return navigate("/");
+        return navigate("/login");
       } else {
         throw new Error("Failed to fetch events");
       }

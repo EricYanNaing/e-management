@@ -206,13 +206,16 @@ exports.authMiddleware = (req, res, next) => {
 };
 
 exports.bookEvent = async (req, res, next) => {
-  const { userId, eventId } = req.body;
-  console.log(userId, eventId, "REQBODY FORM SERVER");
+  const { userId, eventId, ticketType } = req.body;
 
   try {
     const user = await User.findByIdAndUpdate(
       userId,
-      { $addToSet: { bookedEvents: eventId } },
+      {
+        $addToSet: {
+          bookedEvents: { eventId: eventId, ticketType: ticketType },
+        },
+      },
       { new: true }
     );
 
@@ -228,17 +231,16 @@ exports.bookEvent = async (req, res, next) => {
 };
 
 exports.getBookedEvents = async (req, res, next) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
 
   try {
-    const user = await User.findById(userId).populate("bookedEvents");
+    const user = await User.findById(userId).populate("bookedEvents.eventId");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const bookedEvents = user.bookedEvents;
-    res.status(200).json({ bookedEvents });
+    res.status(200).json({ bookedEvents: user.bookedEvents });
   } catch (error) {
     console.error("Error fetching booked events:", error);
     res.status(500).json({ message: "Something went wrong" });

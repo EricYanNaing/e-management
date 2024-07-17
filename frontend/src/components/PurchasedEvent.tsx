@@ -16,6 +16,7 @@ const PurchasedEvent = () => {
     getBookedEvents(userId, dispatch);
     setLoading(false);
   }, []);
+  console.log(bookedEvents);
   return (
     <div className="flex-1 p-4 w-full">
       {!loading && (
@@ -43,6 +44,9 @@ const PurchasedEvent = () => {
                 <th className="py-2 text-left px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                   Event time
                 </th>
+                <th className="py-2 text-left px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                  Ticket Type
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -52,8 +56,8 @@ const PurchasedEvent = () => {
                     <td className="py-2 px-4 border-b border-grey-light">
                       <img
                         src={
-                          event.profile_image
-                            ? `http://localhost:8000/${event.profile_image}`
+                          event.eventId.profile_image
+                            ? `http://localhost:8000/${event.eventId.profile_image}`
                             : defaultPhoto
                         }
                         alt="Foto Perfil"
@@ -61,16 +65,19 @@ const PurchasedEvent = () => {
                       />
                     </td>
                     <td className="py-2 px-4 border-b border-grey-light">
-                      {event.title}
+                      {event.eventId.title}
                     </td>
                     <td className="py-2 px-4 border-b border-grey-light">
-                      {event.place}
+                      {event.eventId.place}
                     </td>
                     <td className="py-2 px-4 border-b border-grey-light">
-                      {event.date}
+                      {event.eventId.date}
                     </td>
                     <td className="py-2 px-4 border-b border-grey-light">
-                      {event.time}
+                      {event.eventId.time}
+                    </td>
+                    <td className="py-2 px-4 border-b border-grey-light">
+                      {event.ticketType}
                     </td>
                   </tr>
                 ))}

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../lib/store/store";
 import { bookEvent } from "../lib/actions/authform-action";
@@ -17,7 +17,18 @@ const BookEventModal: FC<ModalProps> = ({
   userId,
 }) => {
   const event = useSelector((state: RootState) => state.eventData.event);
-  console.log(userId, eventId, "BOOKEND IDSS FROM CLIENT");
+  const [price, setPrice] = useState("");
+  const [ticketType, setTicketType] = useState("");
+
+  const handleChange = (e) => {
+    if (e.target.value === "1") {
+      setTicketType("GA");
+      setPrice(event.ga_price);
+    } else if (e.target.value === "2") {
+      setTicketType("VIP");
+      setPrice(event.vip_price);
+    }
+  };
 
   return (
     <>
@@ -41,7 +52,9 @@ const BookEventModal: FC<ModalProps> = ({
                   <label>
                     <input
                       type="radio"
-                      name="radio"
+                      name="ticketType"
+                      onChange={handleChange}
+                      required
                       value="1"
                       className="mr-2 text-black border-2 border-gray-300 focus:border-gray-300 focus:ring-black"
                     />
@@ -50,7 +63,9 @@ const BookEventModal: FC<ModalProps> = ({
                   <label>
                     <input
                       type="radio"
-                      name="radio"
+                      name="ticketType"
+                      onChange={handleChange}
+                      required
                       value="2"
                       className="mr-2 text-black border-2 border-gray-300 focus:border-gray-300 focus:ring-black"
                     />
@@ -63,7 +78,7 @@ const BookEventModal: FC<ModalProps> = ({
                 <p className="text-gray-500 ">Event</p>
                 <input
                   type="text"
-                  name="price"
+                  name="event"
                   value={event.title}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
@@ -97,14 +112,16 @@ const BookEventModal: FC<ModalProps> = ({
                 <input
                   type="text"
                   name="price"
-                  value={event.ga_price}
+                  value={price}
                   disabled
                   className=" block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                 />
               </div>
 
               <button
-                onClick={() => bookEvent(userId, eventId, closeModal)}
+                onClick={() =>
+                  bookEvent(userId, eventId, ticketType, closeModal)
+                }
                 className="bg-red-500 hover:bg-red-600 duration-300 text-white w-full h-10 mt-4 rounded-md"
               >
                 Book Event

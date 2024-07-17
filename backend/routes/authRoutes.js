@@ -36,7 +36,7 @@ router.put("/edit", authController.updateUser);
 router.post("/bookevent", authController.bookEvent);
 
 // GET User's events
-router.post("/bookedevents", authController.getBookedEvents);
+router.get("/bookedEvents/:userId", authController.getBookedEvents);
 
 // Delete Event
 router.post("/delete/:id", authController.deleteUser);
