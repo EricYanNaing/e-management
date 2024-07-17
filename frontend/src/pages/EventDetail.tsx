@@ -4,7 +4,7 @@ import { FaRegCalendar } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { CiCircleCheck } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvent } from "../lib/store/reducer/events";
 import { RootState } from "../lib/store/store";
@@ -17,6 +17,9 @@ const EventDetail = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const event = useSelector((state: RootState) => state.eventData.event);
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   const getEventInfo = async () => {
     try {
@@ -33,6 +36,10 @@ const EventDetail = () => {
 
   //   Modal On/Off
   const openModal = () => {
+    if (!token) {
+      alert("Login First to book the event.");
+      navigate("/login");
+    }
     setShowModal(true);
   };
   const closeModal = () => {
@@ -87,7 +94,12 @@ const EventDetail = () => {
                 </div>
 
                 {/* Modal */}
-                <BookEventModal showModal={showModal} closeModal={closeModal} />
+                <BookEventModal
+                  userId={userId}
+                  eventId={id}
+                  showModal={showModal}
+                  closeModal={closeModal}
+                />
                 {/* Modal */}
 
                 <div className="space-y-8">

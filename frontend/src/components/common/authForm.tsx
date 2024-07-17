@@ -1,16 +1,18 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import StyleErrorMesg from "./StyleErrorMesg";
 import { Formik, Form, Field } from "formik";
 import { AiOutlineLoading } from "react-icons/ai";
 import * as Yup from "yup";
 import { useState } from "react";
 import { AuthValuesProps } from "../../lib/types/authformprops";
-import { useDispatch } from "react-redux";
-import { setAuth } from "../../lib/store/reducer/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginReducer } from "../../lib/store/reducer/auth";
+import { RootState } from "../../lib/store/store";
 
 const AuthForm = ({ isLogin }: { isLogin: boolean }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const initialValues: AuthValuesProps = {
     _id: "",
@@ -43,14 +45,14 @@ const AuthForm = ({ isLogin }: { isLogin: boolean }) => {
           "Content-Type": "application/json",
         },
       });
-      if (response.status === 201) {
-        return <Navigate to={"/"} />;
-      } else if (response.status === 200) {
+      if (response.status === 200) {
         const data = await response.json();
         const { token, user_mail, userId } = data;
-        dispatch(setAuth({ token, user_mail, userId }));
+        console.log(data);
+        dispatch(setLoginReducer({ token, user_mail, userId }));
 
-        return <Navigate to={"/"} />;
+        window.alert("Auth Success ");
+        navigate("/");
       } else {
         console.error("Error fetching users:");
         window.alert("Auth Failed!!!");
@@ -67,7 +69,7 @@ const AuthForm = ({ isLogin }: { isLogin: boolean }) => {
         },
       });
       if (response.status === 200 || response.status === 201) {
-        return <Navigate to={"/"} />;
+        return navigate("/");
       } else {
         throw new Error("Failed to fetch events");
       }

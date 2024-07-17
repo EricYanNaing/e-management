@@ -32,10 +32,19 @@ router.post(
 // Update events
 router.put("/edit", authController.updateUser);
 
+// BOOK EVENT
+router.post("/bookevent", authController.bookEvent);
+
+// GET User's events
+router.post("/bookedevents", authController.getBookedEvents);
+
 // Delete Event
 router.post("/delete/:id", authController.deleteUser);
 
 // Login
 router.post("/login", authController.login);
+
+// Middle ware
+router.get("/status", authController.authMiddleware);
 
 module.exports = router;

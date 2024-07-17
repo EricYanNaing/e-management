@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FromValuesProps } from "../../types/eventformprops";
 
 interface User {
   _id: string;
@@ -12,12 +13,16 @@ interface User {
 
 export interface UsersState {
   users: User[];
+  userEvents: FromValuesProps[];
+  bookedEvents: FromValuesProps[];
   user: object;
 }
 
 const initialState: UsersState = {
   users: [],
   user: {},
+  userEvents: [],
+  bookedEvents: [],
 };
 
 export const userSlice = createSlice({
@@ -30,9 +35,16 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<User[]>) => {
       state.user = action.payload;
     },
+    setUserEvents: (state, action) => {
+      state.userEvents = action.payload;
+    },
+    setBookEvents: (state, action) => {
+      state.bookedEvents = action.payload;
+    },
   },
 });
 
-export const { setUsers, setUser } = userSlice.actions;
+export const { setUsers, setUser, setUserEvents, setBookEvents } =
+  userSlice.actions;
 
 export default userSlice.reducer;

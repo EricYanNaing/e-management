@@ -1,8 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setLogOutReducer } from "../lib/store/reducer/auth";
 
 const NavBar = () => {
   const [show, setShow] = useState(false);
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const userId = localStorage.getItem("userId");
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(setLogOutReducer());
+    navigate("/login");
+  };
+
   return (
     <header className="border-4 shadow-inner">
       <nav className="container mx-auto px-6 py-3">
@@ -32,33 +45,48 @@ const NavBar = () => {
           </div>
           {/* Search Bar  */}
 
-          <div className="hidden xl:block">
+          <div className="hidden md:block">
             <ul className="flex items-center space-x-8">
               <li>
                 <Link to={"/"} className="">
                   Home
                 </Link>
               </li>
-              <li>
-                <Link to={"/create"} className="">
-                  Create Event
-                </Link>
-              </li>
-              <li>
-                <Link to={"/profile"} className="">
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link to={"/login"} className="">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link to={"/register"} className="">
-                  Register
-                </Link>
-              </li>
+              {token && (
+                <>
+                  <li>
+                    <Link to={"/create"} className="">
+                      Create Event
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/profile/${userId}`} className="">
+                      Profile
+                    </Link>
+                  </li>
+                </>
+              )}
+              {!token && (
+                <>
+                  <li>
+                    <Link to={"/login"} className="">
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={"/register"} className="">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+              {token && (
+                <li>
+                  <div className="cursor-pointer" onClick={handleLogout}>
+                    Logout
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -111,7 +139,7 @@ const NavBar = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/profile"}
+                    to={`/profile/${userId}`}
                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Profile

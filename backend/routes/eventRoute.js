@@ -9,6 +9,9 @@ router.get("/events", eventController.getEvent);
 // GET 1 EVENT
 router.get("/events/:id", eventController.getSigleEvent);
 
+// User's events
+router.post("/myevents", eventController.getUserEvent);
+
 // CREATE EVENTS
 router.post("/create-event", eventController.createEvent);
 

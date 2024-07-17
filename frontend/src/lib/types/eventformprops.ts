@@ -9,6 +9,7 @@ export interface FromValuesProps {
   vip_price: number;
   date: string;
   time: string;
+  creater: string;
   profile_image: string | null;
   createdAt: string;
   updatedAt: string;

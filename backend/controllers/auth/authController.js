@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const User = require("../../models/authSchema.js");
+const EVent = require("../../models/eventSchema.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { removeImg } = require("../../utlis/remove_cv.js");
@@ -177,5 +178,69 @@ exports.login = async (req, res, next) => {
     return res.status(401).json({
       message: "Email or password doesn't match.",
     });
+  }
+};
+
+exports.authMiddleware = (req, res, next) => {
+  const authHeader = req.get("Authorization");
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "User is not authenticated." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const istokenmatch = jwt.verify(token, process.env.JWT_KEY);
+    if (!istokenmatch) {
+      return res.status(401).json({ message: "User is not authenticated." });
+    }
+    req.userId = istokenmatch.userId;
+    res.json("ok");
+    next();
+  } catch {
+    (err) => {
+      return res.status(401).json({ message: "User is not authenticated." });
+    };
+  }
+};
+
+exports.bookEvent = async (req, res, next) => {
+  const { userId, eventId } = req.body;
+  console.log(userId, eventId, "REQBODY FORM SERVER");
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { bookedEvents: eventId } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Event booked successfully" });
+  } catch (error) {
+    console.error("Error booking event:", error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+exports.getBookedEvents = async (req, res, next) => {
+  const { userId } = req.body;
+
+  try {
+    const user = await User.findById(userId).populate("bookedEvents");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const bookedEvents = user.bookedEvents;
+    res.status(200).json({ bookedEvents });
+  } catch (error) {
+    console.error("Error fetching booked events:", error);
+    res.status(500).json({ message: "Something went wrong" });
   }
 };

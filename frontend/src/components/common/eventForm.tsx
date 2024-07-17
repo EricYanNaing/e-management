@@ -16,6 +16,8 @@ const EventForm = ({ isCreate }: { isCreate: boolean }) => {
   const [loading, setLoading] = useState(false);
   const [oldEventInfo, setOldEventInfo] = useState();
   const { id } = useParams();
+
+  const token = localStorage.getItem("token");
   const getEventInfo = async () => {
     try {
       const response = await fetch(`http://localhost:8000/events/${id}`);
@@ -52,6 +54,7 @@ const EventForm = ({ isCreate }: { isCreate: boolean }) => {
   };
 
   const submitHandler = async (values: FromValuesProps) => {
+    const userId = localStorage.getItem("userId");
     const formData = new FormData();
     formData.append("_id", values._id);
     formData.append("title", values.title);
@@ -67,12 +70,16 @@ const EventForm = ({ isCreate }: { isCreate: boolean }) => {
     formData.append("vip_quantity", values.vip_quantity);
     formData.append("date", values.date);
     formData.append("time", values.time);
+    formData.append("creater", userId);
     if (isCreate) {
       // Create form
       try {
         const response = await fetch("http://localhost:8000/create-event", {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (response.status === 201 || response.status === 200) {

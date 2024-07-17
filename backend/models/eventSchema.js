@@ -41,6 +41,12 @@ const eventSchema = new Schema(
     profile_image: {
       type: String,
     },
+    creater: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    bookedBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

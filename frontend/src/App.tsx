@@ -7,8 +7,10 @@ import EditEvent from "./pages/EditEvent";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import isLogin from "./components/common/isLogin";
 
 function App() {
+  const token = localStorage.getItem("token");
   const routes = [
     {
       path: "/",
@@ -25,13 +27,16 @@ function App() {
         {
           path: "/create",
           element: <CreateEvent />,
+          loader: isLogin,
         },
         {
           path: "/edit/:id",
+          loader: isLogin,
           element: <EditEvent />,
         },
         {
-          path: "/profile",
+          path: "/profile/:id",
+          loader: isLogin,
           element: <Profile />,
         },
         {

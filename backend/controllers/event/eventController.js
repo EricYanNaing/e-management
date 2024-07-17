@@ -41,6 +41,7 @@ exports.createEvent = (req, res, next) => {
     ga_price,
     vip_quantity,
     vip_price,
+    creater,
   } = req.body;
 
   const profile_image = req.file;
@@ -63,6 +64,7 @@ exports.createEvent = (req, res, next) => {
     ga_price,
     vip_quantity,
     vip_price,
+    creater,
     profile_image: profile_image ? profile_image.path : "",
   })
     .then(() => {
@@ -92,6 +94,37 @@ exports.getSigleEvent = (req, res, next) => {
         message: "Something went wrong.",
       });
     });
+};
+
+// get 1 func
+exports.getUserEvent = (req, res, next) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ message: "UserId is required" });
+  }
+
+  try {
+    const userIdObject = new mongoose.Types.ObjectId(userId);
+
+    Event.find({ creater: userIdObject })
+      .then((events) => {
+        if (!events) {
+          return res
+            .status(404)
+            .json({ message: "No eventss found for this user" });
+        }
+        return res.status(200).json({ events });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).json({
+          message: "Something went wrong.",
+        });
+      });
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid UserId format" });
+  }
 };
 
 // update func

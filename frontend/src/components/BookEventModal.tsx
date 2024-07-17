@@ -1,14 +1,24 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../lib/store/store";
+import { bookEvent } from "../lib/actions/authform-action";
 
 type ModalProps = {
   showModal: boolean;
   closeModal: () => void;
+  userId: string;
+  eventId: string;
 };
 
-const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
+const BookEventModal: FC<ModalProps> = ({
+  showModal,
+  closeModal,
+  eventId,
+  userId,
+}) => {
   const event = useSelector((state: RootState) => state.eventData.event);
+  console.log(userId, eventId, "BOOKEND IDSS FROM CLIENT");
+
   return (
     <>
       {showModal && (
@@ -94,7 +104,7 @@ const BookEventModal: FC<ModalProps> = ({ showModal, closeModal }) => {
               </div>
 
               <button
-                onClick={closeModal}
+                onClick={() => bookEvent(userId, eventId, closeModal)}
                 className="bg-red-500 hover:bg-red-600 duration-300 text-white w-full h-10 mt-4 rounded-md"
               >
                 Book Event

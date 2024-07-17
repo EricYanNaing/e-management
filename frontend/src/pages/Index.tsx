@@ -7,12 +7,13 @@ import { RootState } from "../lib/store/store";
 const Index = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.authData.token);
   const events = useSelector((state: RootState) => state.eventData.events);
 
   useEffect(() => {
     setLoading(true);
 
-    getEvents(dispatch);
+    getEvents(dispatch, token);
 
     setLoading(false);
   }, [dispatch]);

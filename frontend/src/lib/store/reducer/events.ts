@@ -11,6 +11,7 @@ interface Event {
   ga_price: number;
   vip_quantity: number;
   vip_price: number;
+  creater: string;
   profile_image: string;
   createdAt: string;
   updatedAt: string;

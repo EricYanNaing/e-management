@@ -14,6 +14,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    bookedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
   },
   {
     timestamps: true,

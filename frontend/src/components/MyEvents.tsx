@@ -1,27 +1,34 @@
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import defaultPhoto from "../assets/default_event_photo.jpg";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../lib/store/store";
 import { useEffect, useState } from "react";
-import { getEvents } from "../lib/actions/eventform-actions";
+import { getEvents, getUserEvents } from "../lib/actions/eventform-actions";
 
 const MyEvents = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const events = useSelector((state: RootState) => state.eventData.events);
+  const events = useSelector((state: RootState) => state.userData.userEvents);
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const deleteEvent = async (id: string) => {
     confirm("Are you sure to delete the event?");
     try {
       const response = await fetch(`http://localhost:8000/delete/${id}`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (!response.ok) {
         throw new Error("Failed to fetch events");
       } else {
         alert("Event Delete");
-        return <Navigate to={"/profile"} />;
+        getUserEvents(dispatch, token, userId);
+        return navigate(`/profile/${userId}`);
       }
     } catch (error) {
       console.log(error);
@@ -30,8 +37,7 @@ const MyEvents = () => {
 
   useEffect(() => {
     setLoading(true);
-
-    getEvents(dispatch);
+    getUserEvents(dispatch, token, userId);
 
     setLoading(false);
   }, [dispatch]);

@@ -6,3 +6,9 @@ export interface AuthValuesProps {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AuthType {
+  token: string;
+  user_mail: string;
+  userId: string;
+}
