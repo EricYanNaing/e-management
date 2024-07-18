@@ -232,6 +232,8 @@ exports.bookEvent = async (req, res, next) => {
 
 exports.getBookedEvents = async (req, res, next) => {
   const { userId } = req.params;
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = 2;
 
   try {
     const user = await User.findById(userId).populate("bookedEvents.eventId");
@@ -240,7 +242,18 @@ exports.getBookedEvents = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ bookedEvents: user.bookedEvents });
+    const totalEvents = user.bookedEvents.length;
+    const totalPages = Math.ceil(totalEvents / perPage);
+
+    const paginatedBookedEvents = user.bookedEvents
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice((currentPage - 1) * perPage, currentPage * perPage);
+
+    res.status(200).json({
+      bookedEvents: paginatedBookedEvents,
+      totalEvents,
+      totalPages,
+    });
   } catch (error) {
     console.error("Error fetching booked events:", error);
     res.status(500).json({ message: "Something went wrong" });

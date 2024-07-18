@@ -51,10 +51,14 @@ export const bookEvent = async (
   }
 };
 
-export const getBookedEvents = async (userId: string, dispatch: Dispatch) => {
+export const getBookedEvents = async (
+  userId: string,
+  dispatch: Dispatch,
+  pageNum: number
+) => {
   try {
     const response = await fetch(
-      `http://localhost:8000/bookedEvents/${userId}`,
+      `http://localhost:8000/bookedEvents/${userId}?page=${pageNum}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -64,9 +68,9 @@ export const getBookedEvents = async (userId: string, dispatch: Dispatch) => {
     if (!response.ok) {
       throw new Error("Failed to fetch booked events");
     }
-    const { bookedEvents } = await response.json();
-    console.log(bookedEvents, "BOOKED EVENTS");
+    const { bookedEvents, totalEvents, totalPages } = await response.json();
     dispatch(setBookEvents(bookedEvents));
+    return { totalEvents, totalPages };
   } catch (error) {
     console.error("Error fetching booked events:", error);
   }

@@ -8,15 +8,48 @@ const PurchasedEvent = () => {
   const [loading, setLoading] = useState(false);
   const userId = localStorage.getItem("userId");
   const dispatch = useDispatch();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalEvents, setTotalEvents] = useState(0);
+
   const bookedEvents = useSelector(
     (state: RootState) => state.userData.bookedEvents
   );
+
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   useEffect(() => {
-    setLoading(true);
-    getBookedEvents(userId, dispatch);
-    setLoading(false);
-  }, []);
-  console.log(bookedEvents);
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        const { totalEvents, totalPages } = await getBookedEvents(
+          userId,
+          dispatch,
+          currentPage
+        );
+        setTotalEvents(totalEvents);
+        setTotalPages(totalPages);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        // Handle error if needed
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [dispatch, currentPage]);
+
   return (
     <div className="flex-1 p-4 w-full">
       {!loading && (
@@ -83,6 +116,24 @@ const PurchasedEvent = () => {
                 ))}
             </tbody>
           </table>
+          <div className="flex justify-center w-full">
+            {currentPage > 1 && (
+              <button
+                onClick={handlePrev}
+                className="bg-teal-600 mt-24 font-medium text-white p-2 rounded-sm mx-3"
+              >
+                Prev
+              </button>
+            )}
+            {currentPage < totalPages && (
+              <button
+                onClick={handleNext}
+                className="bg-teal-600 mt-24 font-medium text-white p-2 rounded-sm "
+              >
+                Next
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

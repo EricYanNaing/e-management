@@ -17,14 +17,28 @@ exports.getEvent = (req, res, next) => {
     });
   }
 
+  const currentPage = req.query.page || 1;
+  const perPage = 3;
+  let totalEvents;
+  let totalPages;
+
   Event.find()
-    .then((events) => {
-      return res.status(200).json({ events });
+    .countDocuments()
+    .then((counts) => {
+      totalEvents = counts;
+      totalPages = Math.ceil(totalEvents / perPage);
+      return Event.find()
+        .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
     })
-    .catch((error) => {
-      console.log(error);
-      res.status(404).json({
-        message: "Something went wrong.",
+    .then((events) => {
+      return res.status(200).json({ events, totalEvents, totalPages });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        message: "Something went wrong!.",
       });
     });
 };
@@ -104,17 +118,30 @@ exports.getUserEvent = (req, res, next) => {
     return res.status(400).json({ message: "UserId is required" });
   }
 
+  const currentPage = req.query.page || 1;
+  const perPage = 5;
+  let totalEvents;
+  let totalPages;
+
   try {
     const userIdObject = new mongoose.Types.ObjectId(userId);
 
     Event.find({ creater: userIdObject })
+      .countDocuments()
+      .then((counts) => {
+        totalEvents = counts;
+        totalPages = Math.ceil(totalEvents / perPage);
+        return Event.find({ creater: userIdObject })
+          .skip((currentPage - 1) * perPage)
+          .limit(perPage);
+      })
       .then((events) => {
         if (!events) {
           return res
             .status(404)
             .json({ message: "No eventss found for this user" });
         }
-        return res.status(200).json({ events });
+        return res.status(200).json({ events, totalEvents, totalPages });
       })
       .catch((error) => {
         console.log(error);

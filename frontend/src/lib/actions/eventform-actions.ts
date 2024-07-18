@@ -32,18 +32,26 @@ export const handleOnTimeChange = (
   // console.log(setFieldValue);
 };
 
-export const getEvents = async (dispatch: Dispatch, token: string) => {
+export const getEvents = async (
+  dispatch: Dispatch,
+  token: string,
+  pageNum: number
+) => {
   try {
-    const response = await fetch("http://localhost:8000/events", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `http://localhost:8000/events?page=${pageNum}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch events");
     }
-    const { events } = await response.json();
+    const { events, totalEvents, totalPages } = await response.json();
     dispatch(setEvents(events));
+    return { totalEvents, totalPages };
   } catch (error) {
     console.error("Error fetching events:", error);
   }
@@ -53,27 +61,32 @@ export const getEvents = async (dispatch: Dispatch, token: string) => {
 export const getUserEvents = async (
   dispatch: Dispatch,
   token: string,
-  userId: string
+  userId: string,
+  pageNum: number
 ) => {
   try {
-    const response = await fetch("http://localhost:8000/myevents", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ userId }),
-    });
+    const response = await fetch(
+      `http://localhost:8000/myevents?page=${pageNum}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch events");
     }
     const data = await response.json();
-    const { events } = data;
+    const { events, totalEvents, totalPages } = data;
 
     if (!events || events.length === 0) {
       console.log("No events found for this user");
     } else {
       dispatch(setUserEvents(events));
+      return { totalEvents, totalPages };
     }
   } catch (error) {
     console.error("Error fetching events:", error);

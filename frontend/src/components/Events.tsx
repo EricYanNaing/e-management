@@ -2,8 +2,13 @@ import { FaArrowAltCircleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import defaultPhoto from "../assets/default_event_photo.jpg";
 import { FromValuesProps } from "../lib/types/eventformprops";
+import { FC } from "react";
 
-const Events = ({ event }: { event: FromValuesProps }) => {
+type EventList = {
+  event: FromValuesProps;
+};
+
+const Events: FC<EventList> = ({ event }) => {
   return (
     <>
       <div className="pt-10 px-5">
