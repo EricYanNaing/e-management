@@ -26,25 +26,6 @@ const NavBar = () => {
             </Link>
           </div>
 
-          {/* Search Bar  */}
-          <div className="hidden xl:block">
-            <div className="flex mx-10 rounded-full border-2 border-gray-400">
-              <input
-                className=" w-full border-none  bg-transparent px-8 py-1 text-gray-400 outline-none focus:outline-none "
-                type="search"
-                name="search"
-                placeholder="Search Event..."
-              />
-              <button
-                type="submit"
-                className="m-2 rounded-full hover:bg-red-600 duration-300 bg-red-500 px-8 py-2 text-white"
-              >
-                Search
-              </button>
-            </div>
-          </div>
-          {/* Search Bar  */}
-
           <div className="hidden md:block">
             <ul className="flex items-center space-x-8">
               <li>
@@ -162,20 +143,6 @@ const NavBar = () => {
                   </Link>
                 </li>
               </ul>
-              <div className="flex mx-10 rounded-full mt-10 border-2 border-gray-400">
-                <input
-                  className=" w-full border-none  bg-transparent px-8 py-1 text-gray-400 outline-none focus:outline-none "
-                  type="search"
-                  name="search"
-                  placeholder="Search Event..."
-                />
-                <button
-                  type="submit"
-                  className="m-2 rounded-full hover:bg-red-600 duration-300 bg-red-500 px-8 py-2 text-white"
-                >
-                  Search
-                </button>
-              </div>
             </div>
           )}
           {/* Mobile Menu  */}

@@ -8,7 +8,7 @@ const { removeImg } = require("../../utlis/remove_cv.js");
 const { validationResult } = require("express-validator");
 
 // get func
-exports.getEvent = (req, res, next) => {
+exports.getEvent = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -18,29 +18,27 @@ exports.getEvent = (req, res, next) => {
   }
 
   const currentPage = req.query.page || 1;
+  const searchQuery = req.query.search || "";
   const perPage = 3;
-  let totalEvents;
-  let totalPages;
 
-  Event.find()
-    .countDocuments()
-    .then((counts) => {
-      totalEvents = counts;
-      totalPages = Math.ceil(totalEvents / perPage);
-      return Event.find()
-        .sort({ createdAt: -1 })
-        .skip((currentPage - 1) * perPage)
-        .limit(perPage);
-    })
-    .then((events) => {
-      return res.status(200).json({ events, totalEvents, totalPages });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: "Something went wrong!.",
-      });
-    });
+  try {
+    const query = searchQuery
+      ? { title: { $regex: searchQuery, $options: "i" } }
+      : {};
+
+    const totalEvents = await Event.countDocuments(query);
+    const totalPages = Math.ceil(totalEvents / perPage);
+
+    const events = await Event.find(query)
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
+
+    res.status(200).json({ events, totalEvents, totalPages });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };
 
 // create func

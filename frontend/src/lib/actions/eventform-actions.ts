@@ -35,11 +35,12 @@ export const handleOnTimeChange = (
 export const getEvents = async (
   dispatch: Dispatch,
   token: string,
-  pageNum: number
+  pageNum: number,
+  searchQuery: string = ""
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8000/events?page=${pageNum}`,
+      `http://localhost:8000/events?page=${pageNum}&search=${searchQuery}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

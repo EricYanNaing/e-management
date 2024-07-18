@@ -9,7 +9,7 @@ const Index = () => {
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.authData.token);
   const events = useSelector((state: RootState) => state.eventData.events);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEvents, setTotalEvents] = useState(0);
@@ -25,14 +25,20 @@ const Index = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
+        console.log(searchQuery);
         const { totalEvents, totalPages } = await getEvents(
           dispatch,
           token,
-          currentPage
+          currentPage,
+          searchQuery
         );
         setTotalEvents(totalEvents);
         setTotalPages(totalPages);
@@ -45,13 +51,32 @@ const Index = () => {
     };
 
     fetchUsers();
-  }, [dispatch, token, currentPage]);
+  }, [dispatch, token, currentPage, searchQuery]);
 
   return (
     <section>
-      {events.length &&
-        !loading &&
-        events.map((event) => <Events key={event.title} event={event} />)}
+      {/* Search Bar  */}
+      <div className="pt-3 w-5/12 mx-auto">
+        <div className="flex mx-10 rounded-full border-2 border-gray-400">
+          <input
+            value={searchQuery}
+            onChange={handleSearch}
+            className=" w-full border-none  bg-transparent px-8 py-1 text-gray-400 outline-none focus:outline-none "
+            type="search"
+            name="search"
+            placeholder="Search Event..."
+          />
+          <button
+            type="button"
+            onClick={() => setCurrentPage(1)}
+            className="m-2 rounded-full hover:bg-red-600 duration-300 bg-red-500 px-8 py-2 text-white"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      {/* Search Bar  */}
+      {events.length && !loading && <Events events={events} />}
       <div className="flex justify-center w-full">
         {currentPage > 1 && (
           <button

@@ -233,7 +233,7 @@ exports.bookEvent = async (req, res, next) => {
 exports.getBookedEvents = async (req, res, next) => {
   const { userId } = req.params;
   const currentPage = parseInt(req.query.page) || 1;
-  const perPage = 2;
+  const perPage = 5;
 
   try {
     const user = await User.findById(userId).populate("bookedEvents.eventId");
