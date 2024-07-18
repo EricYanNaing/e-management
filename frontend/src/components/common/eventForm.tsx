@@ -40,9 +40,9 @@ const EventForm = ({ isCreate }: { isCreate: boolean }) => {
   const initialValues: FromValuesProps = {
     title: isCreate ? "" : oldEventInfo?.title,
     ga_quantity: isCreate ? 1 : oldEventInfo?.ga_quantity,
-    ga_price: isCreate ? 0 : oldEventInfo?.ga_price,
+    ga_price: isCreate ? 1 : oldEventInfo?.ga_price,
     vip_quantity: isCreate ? 1 : oldEventInfo?.vip_quantity,
-    vip_price: isCreate ? 0 : oldEventInfo?.vip_price,
+    vip_price: isCreate ? 1 : oldEventInfo?.vip_price,
     place: isCreate ? "" : oldEventInfo?.place,
     description: isCreate ? "" : oldEventInfo?.description,
     date: isCreate ? formatDate(new Date()) : oldEventInfo?.date,
